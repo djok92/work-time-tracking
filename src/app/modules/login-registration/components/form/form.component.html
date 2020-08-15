@@ -1,1 +1,16 @@
-<p>form works!</p>
+<section class="form-holder">
+  <mat-card>
+    <h3 class="form-holder__title">{{ formName }}</h3>
+    <form class="form-holder__form" [formGroup]="form">
+      <mat-form-field>
+        <input formControlName="username" matInput placeholder="Username" type="text" required />
+      </mat-form-field>
+      <mat-form-field>
+        <input formControlName="password" matInput placeholder="Password" type="password" required />
+      </mat-form-field>
+
+      <button type="submit" mat-raised-button color="warn"
+        (click)="runEmitFormValues()">{{ formName === 'Login' ? 'Login' : 'Create Account' }}</button>
+    </form>
+  </mat-card>
+</section>

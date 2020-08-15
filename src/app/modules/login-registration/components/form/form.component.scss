@@ -1,0 +1,14 @@
+.form-holder {
+  margin: 0 auto;
+  width: 400px;
+  text-align: center;
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+
+    button {
+      align-self: flex-start;
+    }
+  }
+}
