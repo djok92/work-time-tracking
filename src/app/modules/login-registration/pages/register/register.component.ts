@@ -44,7 +44,7 @@ export class RegisterComponent implements OnInit {
       this.apiService.createUser(formValues);
       this.router.navigate(['/login']);
     } else {
-      console.log('error');
+      this.registerForm.setErrors({ usernameNotAvailable: true });
     }
   }
 }

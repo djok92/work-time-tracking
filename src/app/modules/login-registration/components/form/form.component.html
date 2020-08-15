@@ -2,12 +2,23 @@
   <mat-card>
     <h3 class="form-holder__title">{{ formName }}</h3>
     <form class="form-holder__form" [formGroup]="form">
+
       <mat-form-field>
         <input formControlName="username" matInput placeholder="Username" type="text" required />
       </mat-form-field>
+
       <mat-form-field>
         <input formControlName="password" matInput placeholder="Password" type="password" required />
+        <ng-container *ngIf="formName === 'Register'">
+          <mat-error *ngIf="passwordControl.errors && passwordControl.touched">Password must contain one capital letter,
+            one special character and be at least 8 characters long.</mat-error>
+        </ng-container>
       </mat-form-field>
+
+      <ng-container *ngIf="form.errors">
+        <mat-error *ngIf="form.errors.invalidCredentials">Invalid credentials</mat-error>
+        <mat-error *ngIf="form.errors.usernameNotAvailable">Username is not available</mat-error>
+      </ng-container>
 
       <button type="submit" mat-raised-button color="warn"
         (click)="runEmitFormValues()">{{ formName === 'Login' ? 'Login' : 'Create Account' }}</button>
