@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginRegistrationData } from 'src/app/interfaces/login-registration-data';
 import { ApiService } from 'src/app/services/api.service';
@@ -6,15 +6,19 @@ import { UserService } from 'src/app/services/user.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
 import { User } from 'src/app/classes/user';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   public registerForm: FormGroup;
   public users: User[];
+
+  private destroy$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,10 +37,12 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe((users: User[]) => {
-      this.users = users;
-      console.log(this.users);
-    });
+    this.userService
+      .getUsers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((users: User[]) => {
+        this.users = users;
+      });
   }
 
   public createUser(formValues: LoginRegistrationData): void {
@@ -47,5 +53,10 @@ export class RegisterComponent implements OnInit {
     } else {
       this.registerForm.setErrors({ usernameNotAvailable: true });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 }

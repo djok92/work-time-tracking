@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
   selector: 'app-employees-summary',
@@ -7,6 +7,11 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeesSummaryComponent implements OnInit {
+  @Input() totalUsers: number;
+  @Input() totalClockedTime: number;
+  @Input() totalProductiveTime: number;
+  @Input() totalUnproductiveTime: number;
+
   constructor() {}
 
   ngOnInit(): void {}

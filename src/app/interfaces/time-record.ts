@@ -4,4 +4,5 @@ export interface TimeRecord {
   productiveTime: number;
   unproductiveTime: number;
   neutralTime: number;
+  totalTime: number;
 }

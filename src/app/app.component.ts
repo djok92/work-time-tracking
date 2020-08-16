@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from 'src/app/services/api.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
@@ -9,13 +10,10 @@ import { ApiService } from 'src/app/services/api.service';
 export class AppComponent implements OnInit {
   title = 'work-time-tracking';
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private userService: UserService) {}
 
   ngOnInit(): void {
-    this.apiService.setUsers('users', [
-      { id: 0, username: 'djok92', password: 'Djokulemancar123!!', active: true, timeRecords: [] },
-      { id: 1, username: 'anakin', password: 'PeniHardavej1!', active: false, timeRecords: [] }
-    ]);
-    this.apiService.setData('userLoggedIn', false);
+    this.userService.getUsersFromJSON();
+    this.apiService.setData('userLoggedIn', true);
   }
 }

@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { UserService } from './user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  constructor(private http: HttpClient, private userService: UserService) {}
+  constructor() {}
 
-  public setUsers(key: string, data: any): void {
+  public setUsersToLocalStorage(key: string, data: any): void {
     localStorage.setItem(key, JSON.stringify(data));
-    this.userService.setUsers(data);
   }
 
   public getData(key: string): any {
@@ -28,6 +25,6 @@ export class ApiService {
   public createUser(data: any): void {
     const users = JSON.parse(localStorage.getItem('users'));
     localStorage.setItem('users', JSON.stringify([...users, data]));
-    this.userService.setUsers([...users, data]);
+    // this.userService.setUsers([...users, data]);
   }
 }
