@@ -1,7 +1,7 @@
 .form-holder {
   margin: 0 auto;
   width: 400px;
-  text-align: center;
+  text-align: left;
 
   &__form {
     display: flex;
@@ -11,5 +11,9 @@
       align-self: flex-start;
       margin-top: 20px;
     }
+  }
+
+  &__title {
+    text-align: center;
   }
 }

@@ -15,6 +15,11 @@
         </ng-container>
       </mat-form-field>
 
+      <ng-container *ngIf="formName === 'Login'">
+        <p>Don't have a account? Go to <span class="highlight-text"><a [routerLink]="['/register']">register
+              page</a></span> to create one.</p>
+      </ng-container>
+
       <ng-container *ngIf="form.errors">
         <mat-error *ngIf="form.errors.invalidCredentials">Invalid credentials</mat-error>
         <mat-error *ngIf="form.errors.usernameNotAvailable">Username is not available</mat-error>

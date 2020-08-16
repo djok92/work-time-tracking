@@ -13,13 +13,17 @@ export class ApiService {
     this.userService.setUsers(data);
   }
 
-  // public getData(key: string): any {
-  //   return localStorage.getItem(key);
-  // }
+  public getData(key: string): any {
+    return localStorage.getItem(key);
+  }
 
-  // public removeData(key: string): void {
-  //   return localStorage.removeItem(key);
-  // }
+  public setData(key: string, data: any): any {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  public removeData(key: string): void {
+    return localStorage.removeItem(key);
+  }
 
   public createUser(data: any): void {
     const users = JSON.parse(localStorage.getItem('users'));

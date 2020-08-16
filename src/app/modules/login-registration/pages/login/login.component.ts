@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { UserService } from 'src/app/services/user.service';
 import { LoginRegistrationData } from 'src/app/interfaces/login-registration-data';
 import { Router } from '@angular/router';
+import { User } from 'src/app/classes/user';
 
 @Component({
   selector: 'app-login',
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
   public loginForm: FormGroup;
-  public users: any[];
+  public users: User[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -27,8 +28,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe((users: any[]) => {
+    this.userService.getUsers().subscribe((users: User[]) => {
       this.users = users;
+      console.log(this.users);
     });
   }
 
@@ -36,6 +38,7 @@ export class LoginComponent implements OnInit {
     const areCredentialsValid = this.authService.checkLoginCredentials(this.users, formData);
     if (areCredentialsValid) {
       this.userService.setLoggedInUser(formData);
+      this.authService.setLoginStatus(true);
       this.router.navigate(['dashboard']);
     } else {
       this.loginForm.setErrors({ invalidCredentials: true });

@@ -5,6 +5,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { UserService } from 'src/app/services/user.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { Router } from '@angular/router';
+import { User } from 'src/app/classes/user';
 
 @Component({
   selector: 'app-register',
@@ -13,7 +14,7 @@ import { Router } from '@angular/router';
 })
 export class RegisterComponent implements OnInit {
   public registerForm: FormGroup;
-  public users: any[];
+  public users: User[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -32,7 +33,7 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.getUsers().subscribe((users: any[]) => {
+    this.userService.getUsers().subscribe((users: User[]) => {
       this.users = users;
       console.log(this.users);
     });

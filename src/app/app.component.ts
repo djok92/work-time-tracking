@@ -13,8 +13,9 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.apiService.setUsers('users', [
-      { username: 'djok92', password: 'Djokulemancar123!!' },
-      { username: 'anakin', password: 'PeniHardavej1!' }
+      { id: 0, username: 'djok92', password: 'Djokulemancar123!!', active: true, timeRecords: [] },
+      { id: 1, username: 'anakin', password: 'PeniHardavej1!', active: false, timeRecords: [] }
     ]);
+    this.apiService.setData('userLoggedIn', false);
   }
 }
