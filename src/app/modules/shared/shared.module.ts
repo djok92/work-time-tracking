@@ -6,18 +6,11 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../material/material.module';
 
 const declarations = [];
-const imports = [
-  CommonModule,
-  FormsModule,
-  ReactiveFormsModule,
-  HttpClientModule,
-  RouterModule,
-  MaterialModule,
-];
+const imports = [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, RouterModule, MaterialModule];
 
 @NgModule({
   declarations: [],
   imports: [...imports],
-  exports: [...imports, ...declarations],
+  exports: [...imports, ...declarations]
 })
 export class SharedModule {}

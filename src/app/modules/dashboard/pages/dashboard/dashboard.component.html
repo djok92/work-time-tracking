@@ -1,3 +1,5 @@
 <app-employees-summary [totalUsers]="totalUsers" [totalClockedTime]="totalClockedTime"
   [totalProductiveTime]="totalProductiveTime" [totalUnproductiveTime]="totalUnproductiveTime"></app-employees-summary>
-<app-table></app-table>
+<app-table [dataSource]="batchOfUsers" [originalDataSourceLength]="totalUsers" [tableColumnNames]="tableColumnNames"
+  (emitPaginatorEvent)="getBatch($event)" (emitMoreDetailsEvent)="setUserForMoreDetails($event)">
+</app-table>

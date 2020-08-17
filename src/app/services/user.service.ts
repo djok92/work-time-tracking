@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, from, of } from 'rxjs';
-import { delay, map, scan, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { delay, map } from 'rxjs/operators';
 import { User } from '../classes/user';
 import { LoginRegistrationData } from '../interfaces/login-registration-data';
 import { HttpClient } from '@angular/common/http';
@@ -86,6 +86,10 @@ export class UserService {
           .reduce((acc: number, curr: number) => acc + curr);
       })
     );
+  }
+
+  public getBatchOfUsers(startIndex: number, endIndex: number): Observable<User[]> {
+    return this.users$.pipe(map((users: User[]) => users.slice(startIndex, endIndex)));
   }
 
   private mapUsers(userData: any): User {
