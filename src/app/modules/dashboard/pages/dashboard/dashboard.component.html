@@ -1,5 +1,6 @@
-<app-employees-summary [totalUsers]="totalUsers" [totalClockedTime]="totalClockedTime"
+<app-employees-summary [totalUsersNumber]="totalUsersNumber" [totalClockedTime]="totalClockedTime"
   [totalProductiveTime]="totalProductiveTime" [totalUnproductiveTime]="totalUnproductiveTime"></app-employees-summary>
-<app-table [dataSource]="batchOfUsers" [originalDataSourceLength]="totalUsers" [tableColumnNames]="tableColumnNames"
-  (emitPaginatorEvent)="getBatch($event)" (emitMoreDetailsEvent)="setUserForMoreDetails($event)">
+<app-table [dataSource]="users" [tableColumnNames]="tableColumnNames" [tableForm]="tableForm"
+  (emitMoreDetailsEvent)="navigateToEmployeeProfile($event)" (emitSearchValue)="getFilteredUsers($event)"
+  (emitSortData)="getSortedUsers($event)" (emitDisplayMode)="getUsersByDisplayMode($event)">
 </app-table>

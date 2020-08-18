@@ -8,7 +8,7 @@ import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core
 })
 export class EmployeesSummaryComponent implements OnInit {
   @Input()
-  totalUsers: number;
+  totalUsersNumber: number;
   @Input()
   totalClockedTime: number;
   @Input()

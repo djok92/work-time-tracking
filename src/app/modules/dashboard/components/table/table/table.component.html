@@ -1,42 +1,56 @@
 <div class="users-table mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource">
+
+  <div class="users-table__global-table-actions">
+    <form class="users-table__form" [formGroup]="tableForm">
+      <mat-form-field>
+        <input formControlName="searchValue" (keyup)="runEmitSearchValue()" matInput type="text"
+          placeholder="Filter Users by Username">
+      </mat-form-field>
+    </form>
+    <button mat-raised-button [color]="displayActiveUsersMode ? 'warn' : 'accent'" class="button"
+      id="toggle-active-inactive" (click)="runEmitDisplayMode()"><span>Display
+        {{ displayActiveUsersMode ? 'inactive' : 'active' }} users</span></button>
+  </div>
 
 
+  <table class="users-table__table" mat-table [dataSource]="batchOfUsers" matSort (matSortChange)="runEmitSort($event)">
     <ng-container matColumnDef="Name">
-      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
       <td mat-cell *matCellDef="let user"> {{user.username}} </td>
     </ng-container>
 
     <ng-container matColumnDef="Total Clocked in time">
-      <th mat-header-cell *matHeaderCellDef> Total Clocked in time </th>
-      <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Clocked in time </th>
+      <td mat-cell *matCellDef="let user"> {{user.totalClockedTime}}h </td>
     </ng-container>
 
     <ng-container matColumnDef="Total Productive time">
-      <th mat-header-cell *matHeaderCellDef> Total Productive time </th>
-      <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Productive time </th>
+      <td mat-cell *matCellDef="let user"> {{user.totalProductiveTime}}h </td>
     </ng-container>
 
     <ng-container matColumnDef="Total Unproductive time">
-      <th mat-header-cell *matHeaderCellDef> Total Unproductive time </th>
-      <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Unproductive time </th>
+      <td mat-cell *matCellDef="let user"> {{user.totalUnproductiveTime}}h</td>
     </ng-container>
 
     <ng-container matColumnDef="Productivity ratio">
-      <th mat-header-cell *matHeaderCellDef> Productivity ratio </th>
-      <td mat-cell *matCellDef="let user"> {{user.username}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Productivity ratio </th>
+      <td mat-cell *matCellDef="let user">
+        {{user.productivityRatio}} </td>
     </ng-container>
 
     <ng-container matColumnDef="See more details">
       <th mat-header-cell *matHeaderCellDef> See more details </th>
-      <td mat-cell *matCellDef="let user"> <button mat-raised-button color="warn"
-          (click)="runMoreDetailsEvent(user)">See more details</button> </td>
+      <td mat-cell *matCellDef="let user"> <button mat-raised-button color="warn" class="button"
+          (click)="runMoreDetailsEvent(user)">See
+          more details</button> </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="tableColumnNames"></tr>
     <tr mat-row *matRowDef="let row; columns: tableColumnNames;"></tr>
 
   </table>
-  <mat-paginator [length]="paginationData.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
-    (page)="runEmitPaginatorEvent($event)"></mat-paginator>
+  <mat-paginator [length]="dataSource?.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons
+    (page)="changePage($event)"></mat-paginator>
 </div>

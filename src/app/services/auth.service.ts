@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LoginRegistrationData } from '../interfaces/login-registration-data';
 import { ApiService } from './api.service';
+import { User } from '../classes/user';
 
 @Injectable({
   providedIn: 'root'
@@ -8,12 +9,12 @@ import { ApiService } from './api.service';
 export class AuthService {
   constructor(private apiService: ApiService) {}
 
-  public checkIfUserNameAvailable(users: any[], username: string): boolean {
+  public checkIfUserNameAvailable(users: User[], username: string): boolean {
     return !users.some((user) => user.username === username);
   }
 
-  public checkLoginCredentials(users: any[], loginData: LoginRegistrationData): boolean {
-    return users.some((user: any) => user.username === loginData.username && user.password === loginData.password);
+  public checkLoginCredentials(users: User[], loginData: LoginRegistrationData): boolean {
+    return users.some((user: User) => user.username === loginData.username && user.password === loginData.password);
   }
 
   public getLoginStatus(): boolean {

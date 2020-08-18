@@ -3,7 +3,11 @@ import { UserService } from 'src/app/services/user.service';
 import { zip, ReplaySubject } from 'rxjs';
 import { takeUntil, take } from 'rxjs/operators';
 import { User } from 'src/app/classes/user';
-import { PaginationData } from 'src/app/interfaces/pagination-data';
+// import { PaginationData } from 'src/app/interfaces/pagination-data';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { SortData } from 'src/app/interfaces/sort-data';
+import { DisplayModeData } from 'src/app/interfaces/display-mode-data';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +18,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public users: User[];
   public batchOfUsers: User[];
   public usersLength: number;
-  public totalUsers: number;
+  public totalUsersNumber: number;
   public totalClockedTime: number;
   public totalProductiveTime: number;
   public totalUnproductiveTime: number;
@@ -27,9 +31,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
     'See more details'
   ];
 
+  public tableForm: FormGroup;
+
   private destroy$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private router: Router, private formBuilder: FormBuilder) {
+    this.tableForm = this.formBuilder.group({
+      searchValue: ''
+    });
+  }
 
   ngOnInit(): void {
     zip(
@@ -40,7 +50,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     )
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: number[]) => {
-        this.totalUsers = data[0];
+        this.totalUsersNumber = data[0];
         this.totalClockedTime = data[1];
         this.totalProductiveTime = data[2];
         this.totalUnproductiveTime = data[3];
@@ -52,21 +62,30 @@ export class DashboardComponent implements OnInit, OnDestroy {
       .subscribe((users: User[]) => (this.users = users));
   }
 
-  public getBatch(paginationData: PaginationData): void {
-    console.log('fired');
+  public navigateToEmployeeProfile(user: User): void {
+    this.router.navigate([`employee/${user.id}`]);
+  }
+
+  public getFilteredUsers(searchValue: string): void {
     this.userService
-      .getBatchOfUsers(
-        paginationData.pageIndex * paginationData.pageSize,
-        paginationData.pageIndex * paginationData.pageSize + paginationData.pageSize
-      )
+      .filterUsersByUsername(searchValue)
       .pipe(take(1))
       .subscribe((users: User[]) => {
-        this.batchOfUsers = Object.assign([], users);
+        this.users = [...users];
       });
   }
 
-  public setUserForMoreDetails(user: User): void {
-    console.log(user);
+  public getSortedUsers(sortData: SortData): void {
+    this.users = [...this.userService.sortUsersByProperty(this.users, sortData)];
+  }
+
+  public getUsersByDisplayMode(displayModeData: DisplayModeData): void {
+    this.userService
+      .filterUsersByActiveStatus(displayModeData.displayActiveUsersMode)
+      .pipe(take(1))
+      .subscribe(
+        (users: User[]) => (this.users = [...this.userService.sortUsersByProperty(users, displayModeData.sortData)])
+      );
   }
 
   ngOnDestroy(): void {

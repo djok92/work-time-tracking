@@ -48,7 +48,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   public createUser(formValues: LoginRegistrationData): void {
     const isUsernameAvailable = this.authService.checkIfUserNameAvailable(this.users, formValues.username);
     if (isUsernameAvailable) {
-      this.apiService.createUser(formValues);
+      this.apiService.patchData(formValues, 'users');
+      this.userService.createUser(formValues);
       this.router.navigate(['/login']);
     } else {
       this.registerForm.setErrors({ usernameNotAvailable: true });

@@ -1,8 +1,11 @@
 <section class="employees-summary">
   <mat-card>
-    <p>Total number of users: {{ totalUsers }}</p>
-    <p>Total clocked hours: {{ totalClockedTime }}h</p>
-    <p>Total productive hours: {{ totalProductiveTime }}h</p>
-    <p>Total unproductive hours: {{ totalUnproductiveTime}}h</p>
+    <mat-card-title>All employees summary</mat-card-title>
+    <mat-card-content>
+      <p>Total number of users: <span class="highlight-text">{{ totalUsersNumber }} </span></p>
+      <p>Total clocked hours: <span class="highlight-text">{{ totalClockedTime }} </span></p>
+      <p>Total productive hours: <span class="highlight-text">{{ totalProductiveTime }}</span></p>
+      <p>Total unproductive hours: <span class="highlight-text">{{ totalUnproductiveTime}}</span></p>
+    </mat-card-content>
   </mat-card>
 </section>

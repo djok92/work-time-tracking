@@ -5,12 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../material/material.module';
 
-const declarations = [];
-const imports = [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, RouterModule, MaterialModule];
-
 @NgModule({
   declarations: [],
-  imports: [...imports],
-  exports: [...imports, ...declarations]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, RouterModule, MaterialModule],
+  exports: [CommonModule, FormsModule, ReactiveFormsModule, HttpClientModule, RouterModule, MaterialModule]
 })
 export class SharedModule {}

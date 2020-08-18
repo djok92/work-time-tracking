@@ -6,6 +6,8 @@ import { LoginRegistrationData } from '../interfaces/login-registration-data';
 import { HttpClient } from '@angular/common/http';
 import { ApiService } from './api.service';
 import { TimeRecord } from '../interfaces/time-record';
+import { UserData } from '../interfaces/user-data';
+import { SortData } from '../interfaces/sort-data';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +21,7 @@ export class UserService {
   public getUsersFromJSON(): void {
     this.httpClient
       .get('/assets/users-small.json')
-      .pipe(map((response: any) => response.map(this.mapUsers)))
+      .pipe(map((response: UserData[]) => response.map(this.mapUsers)))
       .subscribe((users: User[]) => {
         this.setUsers(users);
         this.apiService.setUsersToLocalStorage('users', users);
@@ -30,8 +32,16 @@ export class UserService {
     return this.users$.asObservable().pipe(delay(250));
   }
 
-  public setUsers(users: any[]): void {
+  public getUserById(id: string): Observable<User> {
+    return of(this.users$.value.find((user: User) => user.id === id));
+  }
+
+  public setUsers(users: User[]): void {
     this.users$.next(users);
+  }
+
+  public createUser(userData: LoginRegistrationData): void {
+    this.users$.next([...this.users$.value, new User(userData)]);
   }
 
   public getLoggedInUser(): Observable<User> {
@@ -88,17 +98,95 @@ export class UserService {
     );
   }
 
-  public getBatchOfUsers(startIndex: number, endIndex: number): Observable<User[]> {
-    return this.users$.pipe(map((users: User[]) => users.slice(startIndex, endIndex)));
+  public sortUsersByProperty(dataSource: User[], sortData: SortData): User[] {
+    console.log(sortData);
+    const sortProperty = this.mapTableHeaderNamesToProperties(sortData.active);
+    console.log(sortProperty.type);
+    if (sortProperty.type === 'string') {
+      return this.sortUsersByStringProperty(dataSource, sortProperty.property, sortData.direction);
+    } else {
+      return this.sortUsersByNumericProperty(dataSource, sortProperty.property, sortData.direction);
+    }
   }
 
-  private mapUsers(userData: any): User {
+  public filterUsersByUsername(searchValue: string): Observable<User[]> {
+    return this.users$.pipe(
+      map((users: User[]) => users.filter((user: User) => user.username.toLowerCase().includes(searchValue)))
+    );
+  }
+
+  public filterUsersByActiveStatus(isActiveUsersMode: boolean): Observable<User[]> {
+    return this.users$.pipe(
+      map((users: User[]) => users.filter((user: User) => (isActiveUsersMode ? user.active : !user.active)))
+    );
+  }
+
+  private mapTableHeaderNamesToProperties(
+    tableHeaderName: string
+  ): { property: string; type: 'string' | 'number' } | null {
+    switch (tableHeaderName) {
+      case 'Name':
+        return {
+          property: 'username',
+          type: 'string'
+        };
+      case 'Total Clocked in time':
+        return {
+          property: 'totalClockedTime',
+          type: 'number'
+        };
+      case 'Total Productive time':
+        return {
+          property: 'totalProductiveTime',
+          type: 'number'
+        };
+      case 'Total Unproductive time':
+        return {
+          property: 'totalUnproductiveTime',
+          type: 'number'
+        };
+      case 'Productivity ratio':
+        return {
+          property: 'productivityRatio',
+          type: 'number'
+        };
+      default:
+        return null;
+    }
+  }
+
+  private sortUsersByStringProperty(dataSource: User[], propertyName: string, sortOrder: 'asc' | 'desc'): User[] {
+    return sortOrder === 'desc'
+      ? dataSource.sort((a: User, b: User) => a[propertyName].localeCompare(b[propertyName]))
+      : dataSource.sort((a: User, b: User) => b[propertyName].localeCompare(a[propertyName]));
+  }
+
+  private sortUsersByNumericProperty(dataSource: User[], propertyName: string, sortOrder: 'asc' | 'desc'): User[] {
+    return sortOrder === 'desc'
+      ? dataSource.sort((a: User, b: User) => b[propertyName] - a[propertyName])
+      : dataSource.sort((a: User, b: User) => a[propertyName] - b[propertyName]);
+  }
+
+  private reduceTimeProperty = (dataSource: TimeRecord[], propertyToReduce: string): number => {
+    return dataSource
+      .map((timeRecord: TimeRecord) => timeRecord[propertyToReduce])
+      .reduce((acc: number, curr: number) => acc + curr);
+  };
+
+  private mapUsers = (userData: UserData): User => {
     return new User({
       id: userData.id,
       username: userData.username,
       password: userData.password,
       active: userData.active,
+      totalClockedTime: this.reduceTimeProperty(userData.timeRecords, 'totalTime'),
+      totalProductiveTime: this.reduceTimeProperty(userData.timeRecords, 'productiveTime'),
+      totalUnproductiveTime: this.reduceTimeProperty(userData.timeRecords, 'unproductiveTime'),
+      productivityRatio: (
+        this.reduceTimeProperty(userData.timeRecords, 'productiveTime') /
+        this.reduceTimeProperty(userData.timeRecords, 'unproductiveTime')
+      ).toFixed(2),
       timeRecords: userData.timeRecords
     });
-  }
+  };
 }

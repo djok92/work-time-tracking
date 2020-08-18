@@ -9,13 +9,7 @@ import { MaterialModule } from './modules/material/material.module';
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    SharedModule,
-    MaterialModule
-  ],
+  imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule, SharedModule, MaterialModule],
   providers: [],
   bootstrap: [AppComponent],
   exports: []

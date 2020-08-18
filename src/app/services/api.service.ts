@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { UserData } from '../interfaces/user-data';
 
 @Injectable({
   providedIn: 'root'
@@ -6,7 +7,7 @@ import { Injectable } from '@angular/core';
 export class ApiService {
   constructor() {}
 
-  public setUsersToLocalStorage(key: string, data: any): void {
+  public setUsersToLocalStorage(key: string, data: UserData[]): void {
     localStorage.setItem(key, JSON.stringify(data));
   }
 
@@ -22,9 +23,8 @@ export class ApiService {
     return localStorage.removeItem(key);
   }
 
-  public createUser(data: any): void {
-    const users = JSON.parse(localStorage.getItem('users'));
-    localStorage.setItem('users', JSON.stringify([...users, data]));
-    // this.userService.setUsers([...users, data]);
+  public patchData(data: any, key: string): void {
+    const storedData = JSON.parse(localStorage.getItem(key));
+    localStorage.setItem(key, JSON.stringify([...storedData, data]));
   }
 }
