@@ -17,6 +17,7 @@ import { UtilService } from './util.service';
 export class UserService {
   private users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   private loggedInUser$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  private activeUserProfile$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   constructor(
     private httpClient: HttpClient,
@@ -60,6 +61,15 @@ export class UserService {
       (user: User) => user.username === loginData.username && loginData.password === user.password
     );
     this.loggedInUser$.next(loggedInUser);
+  }
+
+  public setActiveUserProfile(id: string): void {
+    const activeUserProfile = this.users$.value.find((user: User) => user.id === id);
+    this.activeUserProfile$.next(activeUserProfile);
+  }
+
+  public getActiveUserProfile(): Observable<User> {
+    return this.activeUserProfile$.asObservable();
   }
 
   public getNumberOfUsers(): Observable<number> {
@@ -126,11 +136,24 @@ export class UserService {
     );
   }
 
-  public addTimeRecord(user: User, timeRecord: TimeRecord): void {
+  public changeUserStatus(userId: string): Observable<User> {
+    return of(
+      this.users$.value.find((user: User) => {
+        if (user.id === userId) {
+          user.active = !user.active;
+          return user;
+        }
+      })
+    );
+  }
+
+  public addTimeRecord(activeUser: User, timeRecord: TimeRecord): void {
+    const userToAddTimeRecord = this.users$.value.find((user: User) => user.id === activeUser.id);
     timeRecord.clockInTime = this.timeRecordService.convertDateToISOString(new Date(timeRecord.clockInTime));
     timeRecord.clockOutTime = this.timeRecordService.convertDateToISOString(new Date(timeRecord.clockOutTime));
     timeRecord.totalTime = this.timeRecordService.calculateTotalHoursForTimeRecord(timeRecord);
-    console.log(timeRecord);
+    userToAddTimeRecord.timeRecords = [...userToAddTimeRecord.timeRecords, timeRecord];
+    this.activeUserProfile$.next(userToAddTimeRecord);
   }
 
   private mapTableHeaderNamesToProperties(

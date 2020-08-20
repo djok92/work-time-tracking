@@ -202,7 +202,7 @@ ul {
 h1.section-title {
   font-size: 36px;
   font-weight: 400;
-  margin-bottom: 20px;
+  margin-bottom: 50px;
 
   &.left {
     text-align: left;
@@ -216,4 +216,5 @@ h1.section-title {
 h3.section-subtitle {
   @extend .section-title;
   font-size: 24px;
+  margin-bottom: 25px;
 }

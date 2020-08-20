@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { User } from 'src/app/classes/user';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { TimeRecord } from 'src/app/interfaces/time-record';
 
 @Component({
@@ -10,6 +10,14 @@ import { TimeRecord } from 'src/app/interfaces/time-record';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EmployeeProfileActionsComponent implements OnInit {
+  get clockInTimeControl(): AbstractControl {
+    return this.form.controls['clockInTime'];
+  }
+
+  get clockOutTimeControl(): AbstractControl {
+    return this.form.controls['clockOutTime'];
+  }
+
   @Input()
   userProfileToBeDisplayed: User[];
   @Input()

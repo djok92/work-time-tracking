@@ -63,7 +63,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   public navigateToEmployeeProfile(user: User): void {
-    this.router.navigate([`employee/${user.id}`]);
+    this.router.navigate([`employees/${user.id}`]);
   }
 
   public getFilteredUsers(searchValue: string): void {
@@ -80,21 +80,27 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   public getUsersByDisplayMode(displayModeData: DisplayModeData): void {
-    displayModeData.displayActiveUsersMode !== null
-      ? this.userService
-          .filterUsersByActiveStatus(displayModeData.displayActiveUsersMode)
-          .pipe(take(1))
-          .subscribe((users: User[]) => {
-            displayModeData.sortData.direction
-              ? (this.users = [...this.userService.sortUsersByPropertyHandler(users, displayModeData.sortData)])
-              : (this.users = [...users]);
-          })
-      : this.userService
-          .getUsers()
-          .pipe(take(1))
-          .subscribe((users: User[]) => [
-            ...this.userService.sortUsersByPropertyHandler(users, displayModeData.sortData)
-          ]);
+    console.log(displayModeData);
+
+    this.userService
+      .filterUsersByActiveStatus(displayModeData.displayActiveUsersMode)
+      .pipe(take(1))
+      .subscribe((users: User[]) => {
+        displayModeData.sortData.direction
+          ? (this.users = [...this.userService.sortUsersByPropertyHandler(users, displayModeData.sortData)])
+          : (this.users = [...users]);
+      });
+  }
+
+  public getAllUsersSorted(displayModeData: DisplayModeData): void {
+    this.userService
+      .getUsers()
+      .pipe(take(1))
+      .subscribe((users: User[]) => {
+        displayModeData.sortData.direction
+          ? (this.users = [...this.userService.sortUsersByPropertyHandler(users, displayModeData.sortData)])
+          : (this.users = [...users]);
+      });
   }
 
   ngOnDestroy(): void {

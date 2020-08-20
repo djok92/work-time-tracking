@@ -7,7 +7,7 @@
     <app-table [dataSource]="users" [tableColumnNames]="tableColumnNames" [tableForm]="tableForm"
       (emitMoreDetailsEvent)="navigateToEmployeeProfile($event)" (emitSearchValue)="getFilteredUsers($event)"
       (emitSortData)="getSortedUsers($event)" (emitDisplayMode)="getUsersByDisplayMode($event)"
-      (emitDisplayAll)="getUsersByDisplayMode($event)">
+      (emitDisplayAll)="getAllUsersSorted($event)">
     </app-table>
   </div>
 </section>

@@ -1,7 +1,13 @@
 <section class="employee-profile-section section">
-  <h1 class="section-title center">Employee profile</h1>
-  <app-employee-profile-actions [userProfileToBeDisplayed]="userProfileToBeDisplayed" [form]="addTimeRecordForm"
-    (emitFormValues)="addTimeRecordForUser($event)">
-  </app-employee-profile-actions>
-  <app-employee-profile-information></app-employee-profile-information>
+  <h1 class="section-title center">Employee profile - {{ userProfileToBeDisplayed.username }}</h1>
+  <div class="employee-profile-section-top">
+    <app-employee-profile-actions [userProfileToBeDisplayed]="userProfileToBeDisplayed" [form]="addTimeRecordForm"
+      (emitFormValues)="addTimeRecordForUser($event)">
+    </app-employee-profile-actions>
+    <app-employee-profile-change-status [isUserProfileActive]="userProfileToBeDisplayed.active"
+      (emitStatusChange)="changeDisplayedUserProfileStatus()">
+    </app-employee-profile-change-status>
+  </div>
+  <app-employee-profile-activity [barChartData]="barChartData" [barChartLabels]="barChartLabels">
+  </app-employee-profile-activity>
 </section>

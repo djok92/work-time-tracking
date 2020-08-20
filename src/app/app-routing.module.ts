@@ -14,7 +14,7 @@ const routes: Routes = [
     canLoad: [AuthGuard]
   },
   {
-    path: 'employee',
+    path: 'employees',
     loadChildren: () =>
       import('../app/modules/employee-profile/employee-profile.module').then((m) => m.EmployeeProfileModule),
     canLoad: [AuthGuard]
