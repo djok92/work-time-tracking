@@ -1,6 +1,5 @@
 .users-table {
   width: 1000px;
-  margin: 30px auto;
 
   &__table {
     width: 100%;
@@ -12,8 +11,9 @@
     align-items: center;
     padding: 10px 20px;
 
-    #toggle-active-inactive {
+    #dashboard-table-button {
       min-width: 170px;
+      margin: 0 10px;
     }
   }
 }

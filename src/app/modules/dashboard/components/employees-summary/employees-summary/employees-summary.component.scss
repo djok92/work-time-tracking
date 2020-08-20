@@ -1,4 +1,6 @@
 .employees-summary {
-  width: 400px;
-  margin: 20px auto;
+  .mat-card-title {
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
 }

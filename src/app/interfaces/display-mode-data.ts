@@ -1,6 +1,6 @@
 import { SortData } from './sort-data';
 
 export interface DisplayModeData {
-  displayActiveUsersMode: boolean;
+  displayActiveUsersMode: boolean | null;
   sortData: SortData;
 }

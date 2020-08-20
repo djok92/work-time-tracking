@@ -76,16 +76,25 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   public getSortedUsers(sortData: SortData): void {
-    this.users = [...this.userService.sortUsersByProperty(this.users, sortData)];
+    this.users = [...this.userService.sortUsersByPropertyHandler(this.users, sortData)];
   }
 
   public getUsersByDisplayMode(displayModeData: DisplayModeData): void {
-    this.userService
-      .filterUsersByActiveStatus(displayModeData.displayActiveUsersMode)
-      .pipe(take(1))
-      .subscribe(
-        (users: User[]) => (this.users = [...this.userService.sortUsersByProperty(users, displayModeData.sortData)])
-      );
+    displayModeData.displayActiveUsersMode !== null
+      ? this.userService
+          .filterUsersByActiveStatus(displayModeData.displayActiveUsersMode)
+          .pipe(take(1))
+          .subscribe((users: User[]) => {
+            displayModeData.sortData.direction
+              ? (this.users = [...this.userService.sortUsersByPropertyHandler(users, displayModeData.sortData)])
+              : (this.users = [...users]);
+          })
+      : this.userService
+          .getUsers()
+          .pipe(take(1))
+          .subscribe((users: User[]) => [
+            ...this.userService.sortUsersByPropertyHandler(users, displayModeData.sortData)
+          ]);
   }
 
   ngOnDestroy(): void {

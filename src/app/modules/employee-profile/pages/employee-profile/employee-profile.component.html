@@ -1,3 +1,7 @@
-<p>employee-profile works!</p>
-<app-employee-profile-actions></app-employee-profile-actions>
-<app-employee-profile-information></app-employee-profile-information>
+<section class="employee-profile-section section">
+  <h1 class="section-title center">Employee profile</h1>
+  <app-employee-profile-actions [userProfileToBeDisplayed]="userProfileToBeDisplayed" [form]="addTimeRecordForm"
+    (emitFormValues)="addTimeRecordForUser($event)">
+  </app-employee-profile-actions>
+  <app-employee-profile-information></app-employee-profile-information>
+</section>

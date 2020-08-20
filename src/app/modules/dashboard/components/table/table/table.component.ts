@@ -39,6 +39,8 @@ export class TableComponent implements OnInit, OnChanges {
   emitSortData: EventEmitter<SortData> = new EventEmitter<SortData>();
   @Output()
   emitDisplayMode: EventEmitter<DisplayModeData> = new EventEmitter<DisplayModeData>();
+  @Output()
+  emitDisplayAll: EventEmitter<DisplayModeData> = new EventEmitter<DisplayModeData>();
 
   public matTableDataSource = new MatTableDataSource<User>();
   public batchOfUsers: User[] = [];
@@ -52,7 +54,7 @@ export class TableComponent implements OnInit, OnChanges {
     active: null,
     direction: null
   };
-  public displayActiveUsersMode = true;
+  public displayActiveUsersMode = null;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -90,6 +92,14 @@ export class TableComponent implements OnInit, OnChanges {
     this.displayActiveUsersMode = !this.displayActiveUsersMode;
     this.emitDisplayMode.emit({
       displayActiveUsersMode: this.displayActiveUsersMode,
+      sortData: this.sortData
+    });
+  }
+
+  public runEmitDisplayAll(): void {
+    this.displayActiveUsersMode = null;
+    this.emitDisplayAll.emit({
+      displayActiveUsersMode: null,
       sortData: this.sortData
     });
   }

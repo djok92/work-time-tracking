@@ -1,1 +1,33 @@
-<p>employee-profile-actions works!</p>
+<section class="employee-profile-actions-section">
+  <h3 class="section-subtitle left">Add time record for employee</h3>
+  <form class="form" [formGroup]="form">
+
+    <mat-form-field>
+      <mat-label>Choose clock in time</mat-label>
+      <input class="dateTime" formControlName="clockInTime" matInput  placeholder="Clock in time" [owlDateTime]="dt1" [owlDateTimeTrigger]="dt1" required />
+      <!-- <span [owlDateTimeTrigger]="dt1">aaa</span> -->
+      <owl-date-time #dt1></owl-date-time>
+    </mat-form-field>
+   
+
+    <mat-form-field>
+      <input  formControlName="clockOutTime" matInput placeholder="Clock out time" [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2" required />
+      <owl-date-time #dt2></owl-date-time>
+    </mat-form-field>
+
+    <mat-form-field>
+      <input formControlName="productiveTime" matInput placeholder="Productive time" type="number" required />
+    </mat-form-field>
+
+    <mat-form-field>
+      <input formControlName="unproductiveTime" matInput placeholder="Unproductive time" type="number" required />
+    </mat-form-field>
+
+    <mat-form-field>
+      <input formControlName="neutralTime" matInput type="number" placeholder="Neutral time" required />
+    </mat-form-field>
+
+    <button type="submit" mat-raised-button color="warn" class="button" (click)="runEmitFormValues()">Add time
+      record</button>
+  </form>
+</section>

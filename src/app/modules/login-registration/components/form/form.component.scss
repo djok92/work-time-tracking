@@ -1,19 +1,5 @@
-.form-holder {
+.form-section {
   margin: 0 auto;
   width: 400px;
   text-align: left;
-
-  &__form {
-    display: flex;
-    flex-direction: column;
-
-    button {
-      align-self: flex-start;
-      margin-top: 20px;
-    }
-  }
-
-  &__title {
-    text-align: center;
-  }
 }

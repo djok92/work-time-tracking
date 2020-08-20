@@ -7,9 +7,13 @@
           placeholder="Filter Users by Username">
       </mat-form-field>
     </form>
-    <button mat-raised-button [color]="displayActiveUsersMode ? 'warn' : 'accent'" class="button"
-      id="toggle-active-inactive" (click)="runEmitDisplayMode()"><span>Display
-        {{ displayActiveUsersMode ? 'inactive' : 'active' }} users</span></button>
+    <div class="buttons-block">
+      <button mat-raised-button color='warn' class="button" id="dashboard-table-button"
+        [disabled]="displayActiveUsersMode === null" (click)="runEmitDisplayAll()">Display all users</button>
+      <button mat-raised-button [color]="displayActiveUsersMode ? 'warn' : 'accent'" class="button"
+        id="dashboard-table-button" (click)="runEmitDisplayMode()">Display
+        {{ displayActiveUsersMode ? 'inactive' : 'active' }} users</button>
+    </div>
   </div>
 
 

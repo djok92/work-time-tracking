@@ -1,7 +1,7 @@
-<section class="form-holder">
+<section class="form-section">
   <mat-card>
-    <h3 class="form-holder__title">{{ formName }}</h3>
-    <form class="form-holder__form" [formGroup]="form">
+    <h3 class="section-title center">{{ formName }}</h3>
+    <form class="form" [formGroup]="form">
 
       <mat-form-field>
         <input formControlName="username" matInput placeholder="Username" type="text" required />

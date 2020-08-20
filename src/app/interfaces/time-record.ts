@@ -1,6 +1,6 @@
 export interface TimeRecord {
-  clockInTime: number;
-  clockOutTime: number;
+  clockInTime: string;
+  clockOutTime: string;
   productiveTime: number;
   unproductiveTime: number;
   neutralTime: number;
