@@ -8,6 +8,8 @@ import { ApiService } from './api.service';
 import { TimeRecord } from '../interfaces/time-record';
 import { UserData } from '../interfaces/user-data';
 import { SortData } from '../interfaces/sort-data';
+import { TimeRecordService } from './time-record.service';
+import { UtilService } from './util.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +18,12 @@ export class UserService {
   private users$: BehaviorSubject<User[]> = new BehaviorSubject<User[]>([]);
   private loggedInUser$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
-  constructor(private httpClient: HttpClient, private apiService: ApiService) {}
+  constructor(
+    private httpClient: HttpClient,
+    private apiService: ApiService,
+    private timeRecordService: TimeRecordService,
+    private utilService: UtilService
+  ) {}
 
   public getUsersFromJSON(): void {
     this.httpClient
@@ -98,14 +105,12 @@ export class UserService {
     );
   }
 
-  public sortUsersByProperty(dataSource: User[], sortData: SortData): User[] {
-    console.log(sortData);
+  public sortUsersByPropertyHandler(dataSource: User[], sortData: SortData): User[] {
     const sortProperty = this.mapTableHeaderNamesToProperties(sortData.active);
-    console.log(sortProperty.type);
     if (sortProperty.type === 'string') {
-      return this.sortUsersByStringProperty(dataSource, sortProperty.property, sortData.direction);
+      return this.utilService.sortUsersByStringProperty(dataSource, sortProperty.property, sortData.direction);
     } else {
-      return this.sortUsersByNumericProperty(dataSource, sortProperty.property, sortData.direction);
+      return this.utilService.sortUsersByNumericProperty(dataSource, sortProperty.property, sortData.direction);
     }
   }
 
@@ -119,6 +124,13 @@ export class UserService {
     return this.users$.pipe(
       map((users: User[]) => users.filter((user: User) => (isActiveUsersMode ? user.active : !user.active)))
     );
+  }
+
+  public addTimeRecord(user: User, timeRecord: TimeRecord): void {
+    timeRecord.clockInTime = this.timeRecordService.convertDateToISOString(new Date(timeRecord.clockInTime));
+    timeRecord.clockOutTime = this.timeRecordService.convertDateToISOString(new Date(timeRecord.clockOutTime));
+    timeRecord.totalTime = this.timeRecordService.calculateTotalHoursForTimeRecord(timeRecord);
+    console.log(timeRecord);
   }
 
   private mapTableHeaderNamesToProperties(
@@ -155,36 +167,18 @@ export class UserService {
     }
   }
 
-  private sortUsersByStringProperty(dataSource: User[], propertyName: string, sortOrder: 'asc' | 'desc'): User[] {
-    return sortOrder === 'desc'
-      ? dataSource.sort((a: User, b: User) => a[propertyName].localeCompare(b[propertyName]))
-      : dataSource.sort((a: User, b: User) => b[propertyName].localeCompare(a[propertyName]));
-  }
-
-  private sortUsersByNumericProperty(dataSource: User[], propertyName: string, sortOrder: 'asc' | 'desc'): User[] {
-    return sortOrder === 'desc'
-      ? dataSource.sort((a: User, b: User) => b[propertyName] - a[propertyName])
-      : dataSource.sort((a: User, b: User) => a[propertyName] - b[propertyName]);
-  }
-
-  private reduceTimeProperty = (dataSource: TimeRecord[], propertyToReduce: string): number => {
-    return dataSource
-      .map((timeRecord: TimeRecord) => timeRecord[propertyToReduce])
-      .reduce((acc: number, curr: number) => acc + curr);
-  };
-
   private mapUsers = (userData: UserData): User => {
     return new User({
       id: userData.id,
       username: userData.username,
       password: userData.password,
       active: userData.active,
-      totalClockedTime: this.reduceTimeProperty(userData.timeRecords, 'totalTime'),
-      totalProductiveTime: this.reduceTimeProperty(userData.timeRecords, 'productiveTime'),
-      totalUnproductiveTime: this.reduceTimeProperty(userData.timeRecords, 'unproductiveTime'),
+      totalClockedTime: this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'totalTime'),
+      totalProductiveTime: this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'productiveTime'),
+      totalUnproductiveTime: this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'unproductiveTime'),
       productivityRatio: (
-        this.reduceTimeProperty(userData.timeRecords, 'productiveTime') /
-        this.reduceTimeProperty(userData.timeRecords, 'unproductiveTime')
+        this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'productiveTime') /
+        this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'unproductiveTime')
       ).toFixed(2),
       timeRecords: userData.timeRecords
     });
