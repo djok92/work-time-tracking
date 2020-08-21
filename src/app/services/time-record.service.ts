@@ -22,6 +22,19 @@ export class TimeRecordService {
       .reduce((acc: number, curr: number) => acc + curr);
   };
 
+  public filterTimeRecordByRange(startRange: Date, endRange: Date, timeRecords: TimeRecord[]): TimeRecord[] {
+    if (startRange !== null && endRange !== null) {
+      return timeRecords.filter((timeRecord: TimeRecord) => {
+        return (
+          new Date(timeRecord.clockInTime).getTime() >= new Date(startRange).getTime() &&
+          new Date(timeRecord.clockOutTime).getTime() >= new Date(endRange).getTime()
+        );
+      });
+    } else {
+      return timeRecords;
+    }
+  }
+
   public calculateIfValidTimeDifferenceAndTotal(timeRecord: TimeRecord): boolean {
     return (
       timeRecord.productiveTime + timeRecord.unproductiveTime + timeRecord.neutralTime <=

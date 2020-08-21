@@ -16,11 +16,11 @@ export class User {
       id: value.id || null,
       username: value.username || null,
       password: value.password || null,
-      active: value.active,
-      totalClockedTime: value.totalClockedTime || null,
-      totalProductiveTime: value.totalProductiveTime || null,
-      totalUnproductiveTime: value.totalUnproductiveTime || null,
-      productivityRatio: value.productivityRatio || null,
+      active: value.active || null,
+      totalClockedTime: value.totalClockedTime || 0,
+      totalProductiveTime: value.totalProductiveTime || 0,
+      totalUnproductiveTime: value.totalUnproductiveTime || 0,
+      productivityRatio: value.productivityRatio || 0,
       timeRecords: value.timeRecords || []
     });
   }

@@ -5,11 +5,18 @@
     width: 100%;
   }
 
+
   &__global-table-actions {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
+
+    form {
+      .mat-form-field {
+        margin: 0 10px 0 5px;
+      }
+    }
 
     #dashboard-table-button {
       min-width: 170px;

@@ -14,6 +14,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.userService.getUsersFromJSON();
-    this.apiService.setData('userLoggedIn', true);
+    this.apiService.setData('userLoggedIn', false);
   }
 }

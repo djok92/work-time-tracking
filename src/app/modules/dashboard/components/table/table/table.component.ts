@@ -13,7 +13,7 @@ import { User } from 'src/app/classes/user';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { PaginationData } from 'src/app/interfaces/pagination-data';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, AbstractControl } from '@angular/forms';
 import { SortData } from 'src/app/interfaces/sort-data';
 import { MatSort } from '@angular/material/sort';
 import { DisplayModeData } from 'src/app/interfaces/display-mode-data';
@@ -25,6 +25,14 @@ import { DisplayModeData } from 'src/app/interfaces/display-mode-data';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements OnInit, OnChanges {
+  get startDate(): AbstractControl {
+    return this.tableForm.controls['startDate'];
+  }
+
+  get endDate(): AbstractControl {
+    return this.tableForm.controls['endDate'];
+  }
+
   @Input()
   dataSource: User[];
   @Input()
@@ -71,7 +79,9 @@ export class TableComponent implements OnInit, OnChanges {
         this.paginationData.pageIndex * this.paginationData.pageSize + this.paginationData.pageSize
       );
       this.matTableDataSource = new MatTableDataSource<User>(this.batchOfUsers);
-      this.sort.disableClear = true;
+      setTimeout(() => {
+        this.sort.disableClear = true;
+      });
     }
   }
 

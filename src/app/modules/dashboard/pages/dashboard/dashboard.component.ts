@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { SortData } from 'src/app/interfaces/sort-data';
 import { DisplayModeData } from 'src/app/interfaces/display-mode-data';
+import { TimeRecordService } from 'src/app/services/time-record.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,9 +36,16 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   private destroy$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
 
-  constructor(private userService: UserService, private router: Router, private formBuilder: FormBuilder) {
+  constructor(
+    private userService: UserService,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private timeRecordService: TimeRecordService
+  ) {
     this.tableForm = this.formBuilder.group({
-      searchValue: ''
+      searchValue: '',
+      startDate: null,
+      endDate: null
     });
   }
 
@@ -80,8 +88,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   public getUsersByDisplayMode(displayModeData: DisplayModeData): void {
-    console.log(displayModeData);
-
     this.userService
       .filterUsersByActiveStatus(displayModeData.displayActiveUsersMode)
       .pipe(take(1))

@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TimeRecord } from 'src/app/interfaces/time-record';
 import { TimeRecordService } from 'src/app/services/time-record.service';
 import { ReplaySubject } from 'rxjs';
+import { ChartData } from 'src/app/interfaces/chart-data';
 
 @Component({
   selector: 'app-employee-profile',
@@ -16,7 +17,7 @@ import { ReplaySubject } from 'rxjs';
 export class EmployeeProfileComponent implements OnInit, OnDestroy {
   public userProfileToBeDisplayed: User;
   public addTimeRecordForm: FormGroup;
-  public barChartData: any;
+  public barChartData: ChartData[];
   public barChartLabels: string[];
 
   private destroy$: ReplaySubject<boolean> = new ReplaySubject<boolean>(1);
@@ -52,7 +53,9 @@ export class EmployeeProfileComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((user: User) => {
         this.userProfileToBeDisplayed = user;
-        this.barChartData = this.timeRecordService.mapTimeRecordDataForChart(this.userProfileToBeDisplayed.timeRecords);
+        this.barChartData = [
+          ...this.timeRecordService.mapTimeRecordDataForChart(this.userProfileToBeDisplayed.timeRecords)
+        ];
         this.barChartLabels = this.timeRecordService.makeChartLabelFromDate(this.userProfileToBeDisplayed.timeRecords);
       });
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { User } from '../classes/user';
 import { LoginRegistrationData } from '../interfaces/login-registration-data';
 import { HttpClient } from '@angular/common/http';
@@ -28,16 +28,15 @@ export class UserService {
 
   public getUsersFromJSON(): void {
     this.httpClient
-      .get('/assets/users-small.json')
+      .get('/assets/users-full.json')
       .pipe(map((response: UserData[]) => response.map(this.mapUsers)))
       .subscribe((users: User[]) => {
         this.setUsers(users);
-        this.apiService.setUsersToLocalStorage('users', users);
       });
   }
 
   public getUsers(): Observable<User[]> {
-    return this.users$.asObservable().pipe(delay(250));
+    return this.users$.asObservable();
   }
 
   public getUserById(id: string): Observable<User> {
@@ -49,7 +48,10 @@ export class UserService {
   }
 
   public createUser(userData: LoginRegistrationData): void {
-    this.users$.next([...this.users$.value, new User(userData)]);
+    const requiredData = { ...userData };
+    requiredData.id = this.generateRandomIdForUser();
+    requiredData.active = true;
+    this.users$.next([...this.users$.value, new User(requiredData)]);
   }
 
   public getLoggedInUser(): Observable<User> {
@@ -78,9 +80,9 @@ export class UserService {
 
   public getTotalClockedTime(): Observable<number> {
     return this.users$.pipe(
-      map((users: User[]) =>
-        users.map((user: User) => user.timeRecords.map((timeRecord: TimeRecord) => timeRecord.totalTime))
-      ),
+      map((users: User[]) => {
+        return users.map((user: User) => user.timeRecords.map((timeRecord: TimeRecord) => timeRecord.totalTime));
+      }),
       map((totalHours: number[][]) => {
         return totalHours
           .reduce((acc: number[], curr: number[]) => acc.concat(curr), [])
@@ -153,7 +155,23 @@ export class UserService {
     timeRecord.clockOutTime = this.timeRecordService.convertDateToISOString(new Date(timeRecord.clockOutTime));
     timeRecord.totalTime = this.timeRecordService.calculateTotalHoursForTimeRecord(timeRecord);
     userToAddTimeRecord.timeRecords = [...userToAddTimeRecord.timeRecords, timeRecord];
-    console.log(this.users$.value);
+    userToAddTimeRecord.totalClockedTime = this.timeRecordService.reduceTimeProperty(
+      userToAddTimeRecord.timeRecords,
+      'totalTime'
+    );
+    userToAddTimeRecord.totalProductiveTime = this.timeRecordService.reduceTimeProperty(
+      userToAddTimeRecord.timeRecords,
+      'productiveTime'
+    );
+    userToAddTimeRecord.totalUnproductiveTime = this.timeRecordService.reduceTimeProperty(
+      userToAddTimeRecord.timeRecords,
+      'unproductiveTime'
+    );
+
+    userToAddTimeRecord.productivityRatio = +(
+      this.timeRecordService.reduceTimeProperty(userToAddTimeRecord.timeRecords, 'productiveTime') /
+      this.timeRecordService.reduceTimeProperty(userToAddTimeRecord.timeRecords, 'unproductiveTime')
+    ).toFixed(2);
     this.activeUserProfile$.next(userToAddTimeRecord);
   }
 
@@ -200,11 +218,19 @@ export class UserService {
       totalClockedTime: this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'totalTime'),
       totalProductiveTime: this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'productiveTime'),
       totalUnproductiveTime: this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'unproductiveTime'),
-      productivityRatio: (
+      productivityRatio: +(
         this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'productiveTime') /
         this.timeRecordService.reduceTimeProperty(userData.timeRecords, 'unproductiveTime')
       ).toFixed(2),
       timeRecords: userData.timeRecords
     });
   };
+
+  private generateRandomIdForUser(): string {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0,
+        v = c == 'x' ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
+  }
 }

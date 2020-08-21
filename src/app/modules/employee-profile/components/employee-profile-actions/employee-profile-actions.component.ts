@@ -32,7 +32,6 @@ export class EmployeeProfileActionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.clockInTimeControl.valueChanges.subscribe((dateValue: Date) => {
-      console.log(dateValue);
       this.clockOutTimeLimit = this.calculateMaxDateForClockOutTimeControl(dateValue);
     });
   }

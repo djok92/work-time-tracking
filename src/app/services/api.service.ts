@@ -15,7 +15,7 @@ export class ApiService {
     return localStorage.getItem(key);
   }
 
-  public setData(key: string, data: any): any {
+  public setData(key: string, data: unknown): void {
     localStorage.setItem(key, JSON.stringify(data));
   }
 
@@ -23,7 +23,7 @@ export class ApiService {
     return localStorage.removeItem(key);
   }
 
-  public patchData(data: any, key: string): void {
+  public patchData(data: unknown, key: string): void {
     const storedData = JSON.parse(localStorage.getItem(key));
     localStorage.setItem(key, JSON.stringify([...storedData, data]));
   }

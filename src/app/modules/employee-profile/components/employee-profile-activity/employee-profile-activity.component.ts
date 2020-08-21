@@ -15,7 +15,16 @@ export class EmployeeProfileActivityComponent implements OnInit {
 
   public barChartOptions = {
     scaleShowVerticalLines: false,
-    responsive: true
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          ticks: {
+            beginAtZero: true
+          }
+        }
+      ]
+    }
   };
   public barChartType = 'bar';
   public barChartLegend = true;
