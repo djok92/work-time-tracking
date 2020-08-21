@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChartData } from 'src/app/interfaces/chart-data';
 
 @Component({
   selector: 'app-employee-profile-activity',
@@ -8,7 +9,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 })
 export class EmployeeProfileActivityComponent implements OnInit {
   @Input()
-  barChartData: any;
+  barChartData: ChartData[];
   @Input()
   barChartLabels: string[];
 
@@ -21,7 +22,5 @@ export class EmployeeProfileActivityComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-    console.log(this.barChartData);
-  }
+  ngOnInit(): void {}
 }

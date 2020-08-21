@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TimeRecord } from '../interfaces/time-record';
+import { ChartData } from '../interfaces/chart-data';
 
 @Injectable({
   providedIn: 'root'
@@ -29,10 +30,10 @@ export class TimeRecordService {
     );
   }
 
-  public mapTimeRecordDataForChart(timeRecords: TimeRecord[]): any[] {
-    let productiveTime = [];
-    let unproductiveTime = [];
-    let neutralTime = [];
+  public mapTimeRecordDataForChart(timeRecords: TimeRecord[]): ChartData[] {
+    let productiveTime: number[] = [];
+    let unproductiveTime: number[] = [];
+    let neutralTime: number[] = [];
     timeRecords.forEach((timeRecord: TimeRecord) => {
       productiveTime = [...productiveTime, timeRecord.productiveTime];
       unproductiveTime = [...unproductiveTime, timeRecord.unproductiveTime];

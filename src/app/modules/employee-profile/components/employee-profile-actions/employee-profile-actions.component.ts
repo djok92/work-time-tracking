@@ -18,6 +18,8 @@ export class EmployeeProfileActionsComponent implements OnInit {
     return this.form.controls['clockOutTime'];
   }
 
+  public clockOutTimeLimit: Date;
+
   @Input()
   userProfileToBeDisplayed: User[];
   @Input()
@@ -28,9 +30,20 @@ export class EmployeeProfileActionsComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.clockInTimeControl.valueChanges.subscribe((dateValue: Date) => {
+      console.log(dateValue);
+      this.clockOutTimeLimit = this.calculateMaxDateForClockOutTimeControl(dateValue);
+    });
+  }
 
   public runEmitFormValues(): void {
     this.emitFormValues.emit(this.form.value);
+  }
+
+  private calculateMaxDateForClockOutTimeControl(clockInTime: Date): Date {
+    const clockOutTimeLimit = new Date(clockInTime);
+    clockOutTimeLimit.setHours(23, 59, 59);
+    return clockOutTimeLimit;
   }
 }

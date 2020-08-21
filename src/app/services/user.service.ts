@@ -153,6 +153,7 @@ export class UserService {
     timeRecord.clockOutTime = this.timeRecordService.convertDateToISOString(new Date(timeRecord.clockOutTime));
     timeRecord.totalTime = this.timeRecordService.calculateTotalHoursForTimeRecord(timeRecord);
     userToAddTimeRecord.timeRecords = [...userToAddTimeRecord.timeRecords, timeRecord];
+    console.log(this.users$.value);
     this.activeUserProfile$.next(userToAddTimeRecord);
   }
 

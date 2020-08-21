@@ -9,8 +9,8 @@
     </mat-form-field>
 
     <mat-form-field>
-      <input [min]="clockInTimeControl.value" formControlName="clockOutTime" matInput placeholder="Clock out time"
-        [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2" required />
+      <input [min]="clockInTimeControl.value" [max]="clockOutTimeLimit" formControlName="clockOutTime" matInput
+        placeholder="Clock out time" [owlDateTime]="dt2" [owlDateTimeTrigger]="dt2" required />
       <owl-date-time #dt2></owl-date-time>
     </mat-form-field>
 
